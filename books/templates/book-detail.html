@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Details</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .book-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px;
+      }
+      .book-details {
+        max-width: 600px;
+        text-align: center;
+      }
+      .book-details img {
+        max-width: 200px;
+        margin-bottom: 10px;
+      }
+      .buttons {
+        margin-top: 20px;
+      }
+      .buttons button {
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="book-container">
+      <div class="book-details">
+        <img id="book-cover" src="" alt="Book Cover" />
+        <h1 id="book-title">Title</h1>
+        <h2 id="book-subtitle">Subtitle</h2>
+        <p><strong>Authors:</strong> <span id="book-authors">Authors</span></p>
+        <p>
+          <strong>Description:</strong>
+          <span id="book-description">Description</span>
+        </p>
+        <p>
+          <strong>Categories:</strong>
+          <span id="book-categories">Categories</span>
+        </p>
+        <p>
+          <strong>Published Date:</strong>
+          <span id="book-published-date">Published Date</span>
+        </p>
+        <p>
+          <strong>Publisher:</strong> <span id="book-publisher">Publisher</span>
+        </p>
+      </div>
+      <div class="buttons">
+        <button id="mark-favorite">Mark as Favorite</button>
+        <button id="add-to-reading-list">Add to Reading List</button>
+      </div>
+    </div>
+
+    <script>
+      // Example book data
+
+      var bookData = JSON.parse("{{ volumeData|escapejs }}");
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("book-cover").src =
+          bookData.imageLinks.thumbnail || "";
+        document.getElementById("book-title").textContent =
+          bookData.title || "No Title";
+        document.getElementById("book-subtitle").textContent =
+          bookData.subTitle || "No Subtitle";
+        document.getElementById("book-authors").textContent = bookData.authors
+          .length
+          ? bookData.authors.join(", ")
+          : "Unknown";
+        document.getElementById("book-description").textContent =
+          bookData.description || "No Description Available";
+        document.getElementById("book-categories").textContent = bookData
+          .categories.length
+          ? bookData.categories.join(", ")
+          : "No Categories";
+        document.getElementById("book-published-date").textContent =
+          bookData.publishedDate || "No Date Available";
+        document.getElementById("book-publisher").textContent =
+          bookData.publisher || "No Publisher";
+      });
+
+      // Add event listeners to buttons
+      document
+        .getElementById("mark-favorite")
+        .addEventListener("click", function () {
+          console.log("Marked as favorite:", bookData.volumeId);
+          // Add AJAX request or logic to mark the book as favorite
+        });
+
+      document
+        .getElementById("add-to-reading-list")
+        .addEventListener("click", function () {
+          console.log("Added to reading list:", bookData.volumeId);
+          // Add AJAX request or logic to add the book to the reading list
+        });
+    </script>
+  </body>
+</html>

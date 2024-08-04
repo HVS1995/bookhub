@@ -1,0 +1,39 @@
+{% comment %} <!DOCTYPE html>
+<html>
+<head>
+    <title>Books List</title>
+</head>
+<body>
+    <h1>Books List</h1>
+
+    <!-- Search Form -->
+    <form method="GET" action="{% url 'fetch_books' %}">
+        <input type="text" name="query" placeholder="Search for books..." value="{{ request.GET.query }}">
+        
+        <!-- Sorting Dropdown -->
+        <select name="orderBy">
+            <option value="relevance" {% if request.GET.orderBy == 'relevance' %}selected{% endif %}>Relevance</option>
+            <option value="newest" {% if request.GET.orderBy == 'newest' %}selected{% endif %}>Newest</option>
+        </select>
+
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Books List -->
+    <ul>
+        {% for book in books_data %}
+        <li>
+            <h2>{{ book.title }}</h2>
+            <p><strong>Authors:</strong> {{ book.authors|join:", " }}</p>
+            <p><strong>Description:</strong> {{ book.description }}</p>
+            <p><strong>Categories:</strong> {{ book.categories|join:", " }}</p>
+        </li>
+        {% empty %}
+        <li>No books found.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html> {% endcomment %}
+
+<!-- template.html -->
+<a href="{% url 'oauth2callback' %}">Authenticate with Google</a>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OAuth2 Authentication Result</title>
+  </head>
+  <body>
+    <h1>OAuth2 Authentication Result</h1>
+    {% if success %}
+    <p>Authentication was successful!</p>
+    <p>Credentials: {{ credentials }}</p>
+    {% else %}
+    <p>There was an error during authentication: {{ error_message }}</p>
+    {% endif %}
+    <a href="{% url 'home' %}">Go to Home</a>
+  </body>
+</html>

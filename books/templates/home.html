@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bookshelf</title>
+    <style>
+        /* Basic styles for tabs */
+        .tab {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 5px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #f1f1f1;
+            border-top: none;
+            background-color: #fff;
+            border-radius: 0 5px 5px 5px;
+        }
+
+        .active {
+            background-color: #fff;
+            border-bottom: none;
+        }
+
+        .active-content {
+            display: block;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Bookshelf</h1>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab" onclick="openTab('favorite')">Favorite</div>
+        <div class="tab" onclick="openTab('reading-list')">Reading List</div>
+        <div class="tab" onclick="openTab('recommended')">Recommended</div>
+        <div class="tab" onclick="openTab('search')">Search</div>
+    </div>
+
+    <!-- Tab Contents -->
+    <div id="favorite" class="tab-content">
+        <h2>Favorite Books</h2>
+        <ul>
+            <!-- List favorite books here -->
+            {% for book in favorite_books %}
+            <li>
+                <a href="{% url 'render-book' book.volumeId %}">{{book.volumeId}}</a>
+                <h3>{{ book.title }}</h3>
+                <p><strong>Authors:</strong> {{ book.authors|join:", " }}</p>
+                <p><strong>Description:</strong> {{ book.description }}</p>
+            </li>
+            {% empty %}
+            <li>No favorite books found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div id="reading-list" class="tab-content">
+        <h2>Reading List</h2>
+        <ul id="reading_list_books_ul">
+            <!-- List reading list books here -->
+            {% for book in reading_list_books %}
+            <li>
+                <h3>{{ book.title }}</h3>
+                <p><strong>Authors:</strong> {{ book.authors|join:", " }}</p>
+                <p><strong>Description:</strong> {{ book.description }}</p>
+            </li>
+            {% empty %}
+            <li>No books in reading list.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div id="recommended" class="tab-content">
+        <h2>Recommended Books</h2>
+        <ul>
+            <!-- List recommended books here -->
+            {% for book in recommended_books %}
+            <li>
+                <h3>{{ book.title }}</h3>
+                <p><strong>Authors:</strong> {{ book.authors|join:", " }}</p>
+                <p><strong>Description:</strong> {{ book.description }}</p>
+            </li>
+            {% empty %}
+            <li>No recommended books found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div id="search" class="tab-content">
+        <h2>Search Books</h2>
+        <div >
+            <input id="search-query" type="text" name="query" placeholder="Search for books...">
+            <select name="searchType" id="search-type">
+                <option value="title" {% if request.GET.searchType == 'title' %}selected{% endif %}>Title</option>
+                <option value="author" {% if request.GET.searchType == 'author' %}selected{% endif %}>Author</option>
+                <option value="publisher" {% if request.GET.searchType == 'publisher' %}selected{% endif %}>Publisher</option>
+            </select>
+            <button type="submit" onclick="searchBooks()">Search</button>
+            <button  onclick="clearSearch()">Clear</button>
+        </div>
+        <ul id="search_results_ul">
+            <!-- List searched books here -->
+            {% for book in search_results %}
+            <li>
+                <h3>{{ book.title }}</h3>
+                <p><strong>Authors:</strong> {{ book.authors|join:", " }}</p>
+                <p><strong>Description:</strong> {{ book.description }}</p>
+            </li>
+            {% empty %}
+            <li>No books found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        {% comment %} console.log("{{favorite_books}}")
+        console.log("{{redirect_tab}}") {% endcomment %}
+        // JavaScript to handle tab switching
+        function openTab(tabId) {
+            var contents = document.getElementsByClassName('tab-content');
+            var tabs = document.getElementsByClassName('tab');
+
+            // Hide all tab contents
+            for (var i = 0; i < contents.length; i++) {
+                contents[i].style.display = 'none';
+            }
+
+            // Remove active class from all tabs
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+
+            // Show the selected tab and add active class
+            document.getElementById(tabId).style.display = 'block';
+            //event.currentTarget.classList.add('active');
+
+            if (tabId != 'search'){
+                loadTabData(tabId);
+            }
+                
+
+        }
+
+        // Initialize by showing the first tab
+        document.addEventListener('DOMContentLoaded', function() {
+            openTab("{{redirect_tab}}");
+        });
+
+        function loadTabData(tabId) {
+            $.ajax({
+                url: '{% url "render_bookshelf" %}',  // URL of the view
+                method: 'GET',
+                data: {
+                    tabId: tabId  // Sending userId as a parameter
+                },
+                success: function(data) {
+                    $('#reading_list_books_ul').empty();
+
+                    // Populate new results using a for loop
+                    for (var i = 0; i < data.length; i++) {
+                        var book = data[i];
+                        var listItem = '<li><h3>' + book.title + '</h3>' +
+                                       '<p><strong>Authors:</strong> ' + (book.authors.length ? book.authors.join(", ") : 'Unknown') + '</p>' +
+                                       '<p><strong>Description:</strong> ' + (book.description || 'No Description Available') + '</p></li>';
+                        $('#reading_list_books_ul').append(listItem);
+                    } 
+                },
+                error: function(error) {
+                    console.log('Error fetching reading list:', error);
+                }
+            });
+        }
+
+        // Function to perform the search and update search results
+        function searchBooks() {
+            console.log('Searching')
+            var query = document.getElementById('search-query').value;
+            var searchType = document.getElementById('search-type').value;
+            
+
+            $.ajax({
+                url: '{% url "render-search-books" %}',  // URL of the view
+                method: 'GET',
+                data: {
+                    keyword: query,
+                    searchType: searchType
+                },
+                success: function(data) {
+                    $('#search_results_ul').empty();
+
+                    // Populate new results using a for loop
+                    for (var i = 0; i < data.length; i++) {
+                        var book = data[i];
+                        var listItem = '<li><a href="{% url 'render-book' 'placeholder' %}">'.replace('placeholder', book.volumeId)+book.volumeId+'</a>'+
+                                        '<h3>' + book.title + '</h3>' +
+                                       '<p><strong>Authors:</strong> ' + (book.authors.length ? book.authors.join(", ") : 'Unknown') + '</p>' +
+                                       '<p><strong>Description:</strong> ' + (book.description || 'No Description Available') + '</p></li>';
+                        $('#search_results_ul').append(listItem);
+                    } 
+                },
+                error: function(error) {
+                    console.log('Error fetching reading list:', error);
+                }
+            })
+
+        }
+
+        function clearSearch() {
+            $('#search_results_ul').empty();
+        }
+    </script>
+</body>
+</html>

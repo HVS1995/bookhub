@@ -1,0 +1,14 @@
+<html>
+  <head>
+    <title>Remove from Favorites</title>
+  </head>
+  <body>
+    <h1>Remove from Favorites</h1>
+    {% if success %}
+    <p>The book has been successfully removed from your favorites!</p>
+    {% else %}
+    <p>There was an error removing the book from your favorites.</p>
+    {% endif %}
+    <a href="{% url 'bookshelves' %}">Go back to bookshelves</a>
+  </body>
+</html>

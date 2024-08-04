@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add to Favorites</title>
+  </head>
+  <body>
+    <h1>Add to Favorites</h1>
+    {% if success %}
+    <p>The book has been added to your favorites!</p>
+    {% else %}
+    <p>There was an error adding the book to your favorites.</p>
+    {% endif %}
+    <a href="{% url 'bookshelves' %}">Go back to bookshelves</a>
+  </body>
+</html>

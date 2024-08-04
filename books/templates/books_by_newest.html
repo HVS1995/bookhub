@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Books by Newest</title>
+  </head>
+  <body>
+    <h1>Books by Newest</h1>
+    {% if books %}
+    <ul>
+      {% for book in books %}
+      <li>
+        <h2>{{ book.title }}</h2>
+        <p><strong>Authors:</strong> {{ book.authors|join:", " }}</p>
+        <p><strong>Description:</strong> {{ book.description }}</p>
+        <p><strong>Published Date:</strong> {{ book.publishedDate }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No books found.</p>
+    {% endif %}
+  </body>
+</html>

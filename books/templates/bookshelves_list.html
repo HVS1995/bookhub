@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bookshelves</title>
+  </head>
+  <body>
+    <h1>Bookshelves</h1>
+    {% if books %}
+    <ul>
+      {% for bookshelf in books %}
+      <li>
+        <h2>{{ bookshelf.title }}</h2>
+        <ul>
+          {% for book in bookshelf.books %}
+          <li>{{ book.title }} by {{ book.author }}</li>
+          {% endfor %}
+        </ul>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No bookshelves found.</p>
+    {% endif %}
+  </body>
+</html>
