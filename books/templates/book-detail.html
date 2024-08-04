@@ -32,6 +32,7 @@
         cursor: pointer;
       }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
     <div class="book-container">
@@ -57,8 +58,12 @@
         </p>
       </div>
       <div class="buttons">
-        <button id="mark-favorite">Mark as Favorite</button>
-        <button id="add-to-reading-list">Add to Reading List</button>
+        <button id="mark-favorite" onclick="markAsFav()">
+          Mark as Favorite
+        </button>
+        <button id="add-to-reading-list" onclick="addToReadList()">
+          Add to Reading List
+        </button>
       </div>
     </div>
 
@@ -104,6 +109,40 @@
           console.log("Added to reading list:", bookData.volumeId);
           // Add AJAX request or logic to add the book to the reading list
         });
+
+      function markAsFav() {
+        $.ajax({
+          url: '{% url "bookshelf/add-volume" %}', // URL of the view
+          method: "GET",
+          data: {
+            volumeId: bookData.volumeId,
+            bookshelfId: 0,
+          },
+          success: function (data) {
+            console.log("added to fav");
+          },
+          error: function (error) {
+            console.log("error in adding to fav", error);
+          },
+        });
+      }
+
+      function addToReadList() {
+        $.ajax({
+          url: '{% url "bookshelf/add-volume" %}', // URL of the view
+          method: "GET",
+          data: {
+            volumeId: bookData.volumeId,
+            bookshelfId: 2,
+          },
+          success: function (data) {
+            console.log("added to reading list");
+          },
+          error: function (error) {
+            console.log("Error in adding to reading list", error);
+          },
+        });
+      }
     </script>
   </body>
 </html>

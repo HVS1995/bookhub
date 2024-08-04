@@ -5,9 +5,9 @@ urlpatterns = [
    
     path('search-books', views.search_books, name='search-books'),
     path('bookshelves/', views.get_bookshelves, name='search-books'),
-    path('bookshelf/add-volume', views.add_volume_in_bookshelf, name='search-books'),
-    path('bookshelf/remove-volume', views.remove_volume_in_bookshelf, name='remove_from_favorites'),
-    path('bookshelf/fetch-volumes', views.fetch_volumes_from_bookshelf, name='fetch_volumes_from_bookshelf'),
+    path('bookshelf/add-volume', views.add_volume_in_bookshelf, name='bookshelf/add-volume'),
+    path('bookshelf/remove-volume', views.remove_volume_in_bookshelf, name='bookshelf/remove-volume'),
+    path('bookshelf/fetch-volumes', views.fetch_volumes_from_bookshelf, name='bookshelf/fetch-volumes'),
     path('authorize/', views.authorize, name='search-books'),
     path('oauth2callback/', views.oauth2callback, name='oauth2callback'),
     path('open-homepage/', views.open_home_page, name='openHomePage'),

@@ -16,7 +16,7 @@ from django.conf import settings
 
 
 creds = Credentials(
-    token='ya29.a0AcM612wKwisxoTz74akLIrIvo5eyEjuMmOCChydKn3sVsRdP7tf_ThLScoZA19PlB248q9kNOzKJzkzBE8GsEnDPvNqY91ELJYRlVsKoRyizpv4GN1RP_K8S3zB1esnR9x7I7dIgkKQCcAlv_FAronpaTivFUrEpb1gaCgYKAecSARASFQHGX2MiUFyepSVU-G01kHxehTLAOg0170',
+    token='ya29.a0AcM612wEpifpmW1E1k_pSXWaO4T9LxlVn2__KGbOMY9uUpGw2pLlID-pGkmCSI8sawvi6tlU70akzC3sqkIv4n9KYgS5AI85XA2ZERYDlu4cfhLYo74X0cdiTpTft7p1A4889vysRDtkpiuDxK6ZdJAdAwJucDmhx04aCgYKAdcSARASFQHGX2MiBq5xazs4jRfdzptUqRSO3w0170',
     refresh_token=None,
     token_uri='https://oauth2.googleapis.com/token',
     client_id='1076282603408-jrjejuo13hpur1hugec2bo4lh100t3p4.apps.googleusercontent.com',
@@ -72,7 +72,9 @@ def get_bookshelves():
 def add_volume_in_bookshelf(request):
 
     volume_id = request.GET.get('volumeId', '')
-    bookshelf_id = int(request.GET.get('bookshelfId', 600)) 
+    bookshelf_id = int(request.GET.get('bookshelfId', 600))
+    
+    print(volume_id, bookshelf_id)
     
     if volume_id is '' or bookshelf_id is 600:
         return JsonResponse({'message': 'Invalid parameters'}, status=400)
@@ -300,23 +302,3 @@ def render_book(request, volumeId):
         # Handle exceptions, log error, and provide user feedback
         print(f"Error fetching volume: {e}")
         return redirect('books_view') 
-    # service = build('books', 'v1', credentials=creds)
-    # response = response = service.mylibrary().bookshelves().volumes().list(shelf=0).execute()
-    
-    # books = response.get('items', [])
-    # for item in books:
-    #     volume_info = item.get('volumeInfo', {})
-    #     book_data = {
-    #             'volumeId': item.get('id', ''),
-    #             'title': volume_info.get('title', 'No Title'),
-    #             'subTitle': volume_info.get('subtitle', 'No Sub Title'),
-    #             'authors': volume_info.get('authors', []),
-    #             'description': volume_info.get('description', 'No Description Available'),
-    #             'categories': volume_info.get('categories',[]),
-    #             'publishedDate': volume_info.get('publishedDate',''),
-    #             'imageLinks':  volume_info.get('imageLinks', []),
-    #             'publisher': volume_info.get('publisher', ''),
-                
-    #         }
-    #     books_data.append(book_data)
-    return render(request, 'book-detail.html', {'favorite_books': books_data, 'redirect_tab': 'favorite'})
